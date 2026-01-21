@@ -1,79 +1,62 @@
 # Digital Wallet API
 
-REST API for digital wallet operations using Go and PostgreSQL.
+RESTful API backend for digital wallet services, built with Go and PostgreSQL.
 
-## Features
+## Requirements
 
-- Balance inquiry
-- Withdraw with transaction logging
-- Pessimistic locking to prevent race conditions
-
-## Tech Stack
-
-- Go 1.21+
-- PostgreSQL 16
-- gorilla/mux
-- Docker
-
-## Project Structure
-
-```
-.
-├── cmd/api/           # Entry point
-├── internal/
-│   ├── config/        # Configuration
-│   ├── domain/        # Entities
-│   ├── handler/       # HTTP handlers
-│   ├── middleware/    # Middleware
-│   ├── repository/    # Data access
-│   └── usecase/       # Business logic
-├── pkg/
-│   ├── database/      # DB connection
-│   └── response/      # Response helpers
-└── migrations/        # SQL migrations
-```
+- Go 1.25+
+- Docker & Docker Compose
+- Postman (for testing)
 
 ## Quick Start
 
-```bash
-# Start PostgreSQL
-docker compose up -d
+1. **Start Database**
+   ```bash
+   docker compose up -d
+   ```
 
-# Install dependencies
-go mod tidy
+2. **Run Application**
+   ```bash
+   go mod tidy
+   go run cmd/api/main.go
+   ```
+   Server will start at `http://localhost:8081`.
 
-# Run
-go run cmd/api/main.go
-```
+## How to Test (Easy Way)
 
-Server runs at `http://localhost:8080`
+I've included a Postman Collection to make testing easier without using CLI commands.
 
-## API
+1. Open **Postman**.
+2. Click **Import** -> Upload file `digital-wallet.postman_collection.json` from this repository.
+3. You will see 4 ready-to-use requests:
+   - **Health Check**: Verify server is running.
+   - **Get Balance**: Check balance for user John Doe (ID: ...0001).
+   - **Withdraw 50k**: Simulate a successful withdrawal.
+   - **Withdraw Fail**: Simulate insufficient funds error.
 
-### Get Balance
-```
-GET /api/v1/users/{user_id}/balance
-```
+## API Endpoints
 
-### Withdraw
-```
-POST /api/v1/users/{user_id}/withdraw
-Content-Type: application/json
+| Method | Endpoint | Description |
+|:---|:---|:---|
+| GET | `/health` | Server status check |
+| GET | `/api/v1/users/{id}/balance` | Get wallet balance |
+| POST | `/api/v1/users/{id}/withdraw` | Withdraw funds |
 
-{"amount": 50000, "description": "optional"}
-```
+### Test Data (Pre-seeded Users)
 
-## Test Users
+| Name | ID | Initial Balance |
+|:---|:---|:---|
+| John Doe | `550e8400-e29b-41d4-a716-446655440001` | 1,000,000 |
+| Jane Smith | `550e8400-e29b-41d4-a716-446655440002` | 500,000 |
+| Bob Wilson | `550e8400-e29b-41d4-a716-446655440003` | 250,000 |
 
-```
-550e8400-e29b-41d4-a716-446655440001  John Doe     Rp 1,000,000
-550e8400-e29b-41d4-a716-446655440002  Jane Smith   Rp 500,000
-550e8400-e29b-41d4-a716-446655440003  Bob Wilson   Rp 250,000
-```
+## Architecture Notes
 
-## Configuration
-
-Copy `.env.example` to `.env` and adjust as needed.
+- **Language:** Go (Golang)
+- **Database:** PostgreSQL 16 (via Docker)
+- **Architecture:** Clean Architecture (Handler -> Usecase -> Repository)
+- **Concurrency:** Uses `SELECT ... FOR UPDATE` to prevent race conditions during withdrawals.
+- **Transactions:** All withdrawals are wrapped in database transactions (ACID).
 
 ## License
 

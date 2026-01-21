@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "f574478e-ca0a-4413-b0e6-350aec9e0196",
+		"name": "Digital Wallet API",
+		"description": "API collection for Digital Wallet technical test testing.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Balance (John Doe)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/v1/users/550e8400-e29b-41d4-a716-446655440001/balance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"550e8400-e29b-41d4-a716-446655440001",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Withdraw 50k (John Doe)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 50000,\n    \"description\": \"Withdrawal Test\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/v1/users/550e8400-e29b-41d4-a716-446655440001/withdraw",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"550e8400-e29b-41d4-a716-446655440001",
+						"withdraw"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Withdraw - Insufficient Funds",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 999999999,\n    \"description\": \"Fail Test\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/v1/users/550e8400-e29b-41d4-a716-446655440001/withdraw",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"550e8400-e29b-41d4-a716-446655440001",
+						"withdraw"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
