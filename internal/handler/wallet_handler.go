@@ -7,9 +7,9 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/davidgarcia/digital-wallet/internal/domain"
-	"github.com/davidgarcia/digital-wallet/internal/usecase"
-	"github.com/davidgarcia/digital-wallet/pkg/response"
+	"github.com/davidgrcias/digital-wallet/internal/domain"
+	"github.com/davidgrcias/digital-wallet/internal/usecase"
+	"github.com/davidgrcias/digital-wallet/pkg/response"
 )
 
 type WalletHandler struct {

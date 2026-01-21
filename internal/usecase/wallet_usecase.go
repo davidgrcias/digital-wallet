@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/davidgarcia/digital-wallet/internal/domain"
-	"github.com/davidgarcia/digital-wallet/internal/repository"
+	"github.com/davidgrcias/digital-wallet/internal/domain"
+	"github.com/davidgrcias/digital-wallet/internal/repository"
 )
 
 type WalletUsecase interface {

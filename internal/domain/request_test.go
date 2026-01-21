@@ -3,7 +3,7 @@ package domain_test
 import (
 	"testing"
 
-	"github.com/davidgarcia/digital-wallet/internal/domain"
+	"github.com/davidgrcias/digital-wallet/internal/domain"
 )
 
 func TestWithdrawRequest_Validate(t *testing.T) {

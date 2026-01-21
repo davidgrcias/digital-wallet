@@ -13,12 +13,12 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 
-	"github.com/davidgarcia/digital-wallet/internal/config"
-	"github.com/davidgarcia/digital-wallet/internal/handler"
-	"github.com/davidgarcia/digital-wallet/internal/middleware"
-	"github.com/davidgarcia/digital-wallet/internal/repository"
-	"github.com/davidgarcia/digital-wallet/internal/usecase"
-	"github.com/davidgarcia/digital-wallet/pkg/database"
+	"github.com/davidgrcias/digital-wallet/internal/config"
+	"github.com/davidgrcias/digital-wallet/internal/handler"
+	"github.com/davidgrcias/digital-wallet/internal/middleware"
+	"github.com/davidgrcias/digital-wallet/internal/repository"
+	"github.com/davidgrcias/digital-wallet/internal/usecase"
+	"github.com/davidgrcias/digital-wallet/pkg/database"
 )
 
 func main() {
@@ -35,29 +35,25 @@ func main() {
 	}
 	defer db.Close()
 
+	// Initialize handlers
+	healthHandler := handler.NewHealthHandler(db)
 	userRepo := repository.NewPostgresUserRepository(db)
 	transactionRepo := repository.NewPostgresTransactionRepository(db)
 	walletUsecase := usecase.NewWalletUsecase(db, userRepo, transactionRepo)
 	walletHandler := handler.NewWalletHandler(walletUsecase)
 
 	router := mux.NewRouter()
-
-	// Global Middleware
 	router.Use(middleware.Logging)
 
-	// Routes
-	api := router.PathPrefix("/api/v1").Subrouter()
+	// Health check with actual DB ping
+	router.HandleFunc("/health", healthHandler.Check).Methods(http.MethodGet)
 
+	// API routes
+	api := router.PathPrefix("/api/v1").Subrouter()
 	api.HandleFunc("/users/{user_id}/balance", walletHandler.GetBalance).Methods(http.MethodGet)
 
-	// Apply Idempotency ONLY to Withdraw
 	withdrawHandler := http.HandlerFunc(walletHandler.Withdraw)
 	api.Handle("/users/{user_id}/withdraw", middleware.Idempotency(db)(withdrawHandler)).Methods(http.MethodPost)
-
-	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"status": "healthy"}`))
-	}).Methods(http.MethodGet)
 
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.AppPort),

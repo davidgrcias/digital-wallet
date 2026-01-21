@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/davidgarcia/digital-wallet/internal/config"
+	"github.com/davidgrcias/digital-wallet/internal/config"
 )
 
 func NewPostgresConnection(cfg *config.Config) (*sql.DB, error) {

@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/davidgarcia/digital-wallet/internal/domain"
+	"github.com/davidgrcias/digital-wallet/internal/domain"
 )
 
 type UserRepository interface {
