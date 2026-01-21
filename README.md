@@ -1,6 +1,6 @@
 # Digital Wallet API
 
-[![Go CI](https://github.com/davidgarcia/digital-wallet/actions/workflows/ci.yml/badge.svg)](https://github.com/davidgarcia/digital-wallet/actions/workflows/ci.yml)
+[![Go CI](https://github.com/davidgrcias/digital-wallet/actions/workflows/ci.yml/badge.svg)](https://github.com/davidgrcias/digital-wallet/actions/workflows/ci.yml)
 
 RESTful API backend for digital wallet services, built with Go and PostgreSQL.
 
