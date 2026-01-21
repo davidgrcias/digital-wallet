@@ -22,12 +22,6 @@ func NewWalletHandler(walletUsecase usecase.WalletUsecase) *WalletHandler {
 	}
 }
 
-func (h *WalletHandler) RegisterRoutes(router *mux.Router) {
-	api := router.PathPrefix("/api/v1").Subrouter()
-	api.HandleFunc("/users/{user_id}/balance", h.GetBalance).Methods(http.MethodGet)
-	api.HandleFunc("/users/{user_id}/withdraw", h.Withdraw).Methods(http.MethodPost)
-}
-
 func (h *WalletHandler) GetBalance(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userID := vars["user_id"]
