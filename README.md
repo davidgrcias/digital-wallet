@@ -1,5 +1,7 @@
 # Digital Wallet API
 
+[![Go CI](https://github.com/davidgarcia/digital-wallet/actions/workflows/ci.yml/badge.svg)](https://github.com/davidgarcia/digital-wallet/actions/workflows/ci.yml)
+
 RESTful API backend for digital wallet services, built with Go and PostgreSQL.
 
 ## Requirements
@@ -7,14 +9,22 @@ RESTful API backend for digital wallet services, built with Go and PostgreSQL.
 - Go 1.25+
 - Docker & Docker Compose
 - Postman (for testing)
+- Make (Optional, for shortcuts)
 
 ## Quick Start
 
+### Using Makefile (Recommended for Windows/Linux)
+```bash
+make run    # Start Database & Server
+make test   # Run Unit Tests
+make stop   # Stop application
+```
+
+### Manual Setup
 1. **Start Database**
    ```bash
    docker compose up -d
    ```
-
 2. **Run Application**
    ```bash
    go mod tidy
@@ -22,7 +32,7 @@ RESTful API backend for digital wallet services, built with Go and PostgreSQL.
    ```
    Server will start at `http://localhost:8081`.
 
-## How to Test (Easy Way)
+## How to Test
 
 I've included a Postman Collection to make testing easier without using CLI commands.
 
