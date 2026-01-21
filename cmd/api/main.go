@@ -41,7 +41,18 @@ func main() {
 	walletHandler := handler.NewWalletHandler(walletUsecase)
 
 	router := mux.NewRouter()
-	walletHandler.RegisterRoutes(router)
+
+	// Global Middleware
+	router.Use(middleware.Logging)
+
+	// Routes
+	api := router.PathPrefix("/api/v1").Subrouter()
+
+	api.HandleFunc("/users/{user_id}/balance", walletHandler.GetBalance).Methods(http.MethodGet)
+
+	// Apply Idempotency ONLY to Withdraw
+	withdrawHandler := http.HandlerFunc(walletHandler.Withdraw)
+	api.Handle("/users/{user_id}/withdraw", middleware.Idempotency(db)(withdrawHandler)).Methods(http.MethodPost)
 
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -50,7 +61,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.AppPort),
-		Handler:      middleware.Logging(router),
+		Handler:      router,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
 		IdleTimeout:  60 * time.Second,

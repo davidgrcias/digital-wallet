@@ -42,6 +42,10 @@ I've included a Postman Collection to make testing easier without using CLI comm
 | GET | `/api/v1/users/{id}/balance` | Get wallet balance |
 | POST | `/api/v1/users/{id}/withdraw` | Withdraw funds |
 
+### Security Features
+- **Idempotency Key:** Support `Idempotency-Key` header on Withdraw endpoint to prevent double-spending on retries.
+- **Race Condition Prevention:** Uses `SELECT ... FOR UPDATE` (Pessimistic Locking).
+
 ### Test Data (Pre-seeded Users)
 
 | Name | ID | Initial Balance |
@@ -55,7 +59,6 @@ I've included a Postman Collection to make testing easier without using CLI comm
 - **Language:** Go (Golang)
 - **Database:** PostgreSQL 16 (via Docker)
 - **Architecture:** Clean Architecture (Handler -> Usecase -> Repository)
-- **Concurrency:** Uses `SELECT ... FOR UPDATE` to prevent race conditions during withdrawals.
 - **Transactions:** All withdrawals are wrapped in database transactions (ACID).
 
 ## License
