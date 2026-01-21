@@ -44,9 +44,46 @@ I've included a Postman Collection to make testing easier without using CLI comm
    - **Withdraw 50k**: Simulate a successful withdrawal.
    - **Withdraw Fail**: Simulate insufficient funds error.
 
+## Configuration
+
+The application is configured via environment variables. Copy `.env.example` to `.env`.
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `APP_PORT` | Port for the API server | `8081` |
+| `DB_HOST` | Database hostname | `localhost` |
+| `DB_PORT` | Database port | `5432` |
+| `DB_USER` | Database username | `postgres` |
+| `DB_PASSWORD` | Database password | `postgres` |
+| `DB_NAME` | Database name | `wallet_db` |
+
 ## API Endpoints
 
-| Method | Endpoint | Description |
+### cURL Examples
+
+If you prefer terminal commands over Postman:
+
+**1. Check Health**
+```bash
+curl -X GET http://localhost:8081/health
+```
+
+**2. Get Balance**
+```bash
+curl -X GET http://localhost:8081/api/v1/users/550e8400-e29b-41d4-a716-446655440001/balance
+```
+
+**3. Withdraw Funds**
+```bash
+curl -X POST http://localhost:8081/api/v1/users/550e8400-e29b-41d4-a716-446655440001/withdraw \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: unique-key-123" \
+  -d '{"amount": 50000, "description": "Coffee money"}'
+```
+
+### Route List
+
+
 |:---|:---|:---|
 | GET | `/health` | Server status check |
 | GET | `/api/v1/users/{id}/balance` | Get wallet balance |
