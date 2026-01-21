@@ -6,14 +6,14 @@ RESTful API backend for digital wallet services, built with Go and PostgreSQL.
 
 ## Requirements
 
-- Go 1.25+
+- Go 1.23+
 - Docker & Docker Compose
 - Postman (for testing)
 - Make (Optional, for shortcuts)
 
 ## Quick Start
 
-### Using Makefile (Recommended for Windows/Linux)
+### Using Makefile (Recommended)
 ```bash
 make run    # Start Database & Server
 make test   # Run Unit Tests
@@ -40,7 +40,7 @@ I've included a Postman Collection to make testing easier without using CLI comm
 2. Click **Import** -> Upload file `digital-wallet.postman_collection.json` from this repository.
 3. You will see 4 ready-to-use requests:
    - **Health Check**: Verify server is running.
-   - **Get Balance**: Check balance for user John Doe (ID: ...0001).
+   - **Get Balance**: Check balance for user John Doe.
    - **Withdraw 50k**: Simulate a successful withdrawal.
    - **Withdraw Fail**: Simulate insufficient funds error.
 
@@ -64,12 +64,17 @@ I've included a Postman Collection to make testing easier without using CLI comm
 | Jane Smith | `550e8400-e29b-41d4-a716-446655440002` | 500,000 |
 | Bob Wilson | `550e8400-e29b-41d4-a716-446655440003` | 250,000 |
 
-## Architecture Notes
+## Architecture
 
 - **Language:** Go (Golang)
 - **Database:** PostgreSQL 16 (via Docker)
-- **Architecture:** Clean Architecture (Handler -> Usecase -> Repository)
-- **Transactions:** All withdrawals are wrapped in database transactions (ACID).
+- **Pattern:** Clean Architecture (Handler -> Usecase -> Repository)
+- **Transactions:** All withdrawals are atomic (ACID compliant).
+
+## Author
+
+**David Garcia Saragih**
+- GitHub: [@davidgrcias](https://github.com/davidgrcias)
 
 ## License
 
