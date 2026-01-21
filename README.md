@@ -83,7 +83,7 @@ curl -X POST http://localhost:8081/api/v1/users/550e8400-e29b-41d4-a716-44665544
 
 ### Route List
 
-
+| Method | Endpoint | Description |
 |:---|:---|:---|
 | GET | `/health` | Server status check |
 | GET | `/api/v1/users/{id}/balance` | Get wallet balance |
@@ -108,23 +108,11 @@ curl -X POST http://localhost:8081/api/v1/users/550e8400-e29b-41d4-a716-44665544
 - **Pattern:** Clean Architecture (Handler -> Usecase -> Repository)
 - **Transactions:** All withdrawals are atomic (ACID compliant).
 
-## Engineering Decisions & Trade-offs
+## Technical Notes
 
-Here is a breakdown of the technical decisions made for this project:
-
-### 1. Concurrency Safety
-I chose **Pessimistic Locking** (`SELECT ... FOR UPDATE`) over Optimistic Locking.
-- **Why?** In a financial system, data correctness is paramount. We want to prevent race conditions at the database level to ensure a user's balance never drops below zero, even if thousands of requests hit the API simultaneously.
-- **Trade-off:** Slightly lower throughput compared to Optimistic Locking, but significantly safer for this use case.
-
-### 2. Idempotency Key
-Failed network requests shouldn't drain a wallet twice. I implemented a custom middleware compliant with the `Idempotency-Key` header standard.
-- **Behavior:** If a client retries a request with the same key, they receive the *cached* response (from the database) instead of triggering a new transaction.
-
-### 3. Floating Point Math
-**Note for Reviewers:** I used `float64` for simplicity given the time constraints.
-- **Production View:** In a real-world banking ledger, I would strictly use a decimal library (like `shopspring/decimal`) or store values as `int64` (minor units) to avoid floating-point precision errors.
-- **Current Mitigation:** Database column uses `DECIMAL(18,2)` to ensure storage precision.
+- **Concurrency**: I used `SELECT ... FOR UPDATE` (Pessimistic Locking) because in a wallet system, precision beats speed. It prevents race conditions during simultaneous withdrawals.
+- **Idempotency**: Requests include an `Idempotency-Key` header. This ensures that if a user retries a request due to a network timeout, they won't be charged twice.
+- **Data Types**: I used `float64` for current balance calculations to keep the implementation simple. For a real production system, I'd switch to `int64` (storing cents) or a proper Decimal library to avoid any floating-point precision issues. The database already uses `DECIMAL(18,2)` for safety.
 
 ## Author
 
