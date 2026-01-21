@@ -71,6 +71,24 @@ I've included a Postman Collection to make testing easier without using CLI comm
 - **Pattern:** Clean Architecture (Handler -> Usecase -> Repository)
 - **Transactions:** All withdrawals are atomic (ACID compliant).
 
+## Engineering Decisions & Trade-offs
+
+Here is a breakdown of the technical decisions made for this project:
+
+### 1. Concurrency Safety
+I chose **Pessimistic Locking** (`SELECT ... FOR UPDATE`) over Optimistic Locking.
+- **Why?** In a financial system, data correctness is paramount. We want to prevent race conditions at the database level to ensure a user's balance never drops below zero, even if thousands of requests hit the API simultaneously.
+- **Trade-off:** Slightly lower throughput compared to Optimistic Locking, but significantly safer for this use case.
+
+### 2. Idempotency Key
+Failed network requests shouldn't drain a wallet twice. I implemented a custom middleware compliant with the `Idempotency-Key` header standard.
+- **Behavior:** If a client retries a request with the same key, they receive the *cached* response (from the database) instead of triggering a new transaction.
+
+### 3. Floating Point Math
+**Note for Reviewers:** I used `float64` for simplicity given the time constraints.
+- **Production View:** In a real-world banking ledger, I would strictly use a decimal library (like `shopspring/decimal`) or store values as `int64` (minor units) to avoid floating-point precision errors.
+- **Current Mitigation:** Database column uses `DECIMAL(18,2)` to ensure storage precision.
+
 ## Author
 
 **David Garcia Saragih**
