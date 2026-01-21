@@ -6,7 +6,7 @@ RESTful API backend for digital wallet services, built with Go and PostgreSQL.
 
 ## Requirements
 
-- Go 1.23+
+- Go 1.21+
 - Docker & Docker Compose
 - Postman (for testing)
 - Make (Optional, for shortcuts)
